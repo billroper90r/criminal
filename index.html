@@ -1,0 +1,134 @@
+<html>
+
+  <head>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+
+        var bootstrap = document.createElement('link');
+        bootstrap.setAttribute('rel', 'stylesheet');
+        bootstrap.setAttribute('href', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+        document.head.appendChild(bootstrap);
+
+        var charges = document.createElement('input');
+        charges.setAttribute('type', 'text');
+        charges.setAttribute('id', 'charges');
+        document.body.appendChild(charges);
+
+        var name = document.createElement('input');
+        charges.setAttribute('type', 'text');
+        charges.setAttribute('id', 'name');
+        document.body.appendChild(name);
+
+        var history = document.createElement('input');
+        charges.setAttribute('type', 'text');
+        charges.setAttribute('id', 'history');
+        document.body.appendChild(history);
+
+        var output = document.createElement('ol');
+        output.setAttribute('id', 'output');
+        document.body.appendChild(output);
+
+        var outputdiv = document.createElement('div');
+        output.setAttribute('id', 'outputdiv');
+        document.body.appendChild(outputdiv);
+
+
+
+        charges.style.margin = '5px';
+        charges.style.width = '96%';
+        charges.style.height = '32px';
+        charges.style.padding = '5px';
+
+        history.style.margin = '5px';
+        history.style.width = '96%';
+        history.style.height = '32px';
+        history.style.padding = '5px';
+
+        name.style.margin = '5px';
+        name.style.width = '96%';
+        name.style.height = '32px';
+        name.style.padding = '5px';
+
+        output.style.padding = '10px';
+        output.style.border = '1px solid black';
+        output.style.width = charges.style.width;
+        output.style.margin = charges.style.margin;
+        output.style.height = '300px';
+        output.style.borderRadius = '4px';
+        output.style.borderColor = '#ccc';
+
+
+        outputdiv.style.border = '1px solid black';
+        outputdiv.style.width = charges.style.width;
+        outputdiv.style.margin = charges.style.margin;
+        outputdiv.style.height = '30px';
+        outputdiv.style.borderRadius = '4px';
+        outputdiv.style.borderColor = '#ccc';
+
+        charges.setAttribute('placeholder', 'What are your charges…');
+        name.setAttribute('placeholder', 'Enter your name...');
+        history.setAttribute('placeholder', 'Whats your criminal history...');
+
+        var label = document.createElement('div');
+        label.innerHTML = 'Enter your criminal charges below to start';
+        document.body.insertBefore(label, charges);
+
+        label.style.margin = '5px';
+
+        var submit = document.createElement('button');
+        submit.innerHTML = 'Submit';
+        document.body.insertBefore(submit, output);
+
+        submit.setAttribute('class', 'btn btn-primary');
+
+        submit.style.margin = '5px';
+
+        var secretKey = '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';
+
+        var legalDefenses = 'Heres a ordered list of some options of possible legal defenses that our lawyers have come up with which might be used to get these charges dropped in the Queensland Magistrates court, Based on the QLD legal system: \n <div> \n <li> ';
+
+        var criminalHistory = ', and the past criminal history is ';
+
+        var chargesFacing = 'The Criminal charges ';
+
+        var isFacing = 'is facing are '
+
+        var exampleList = ' //Example list <br><li>Was not present at the scene of the crime. <br><li>Was wrongly accused <li>.... End example. // '
+
+        submit.addEventListener('click', function() {
+          var prompt = exampleList + chargesFacing + name.value + isFacing + charges.value + criminalHistory + history.value + ' , ' + legalDefenses;
+          var url = 'https://api.openai.com/v1/engines/davinci/completions';
+          var data = {
+            'prompt': prompt,
+            'max_tokens': 130,
+            'temperature': 0.9,
+            'top_p': 1,
+            'n': 1,
+            'stream': false,
+            'logprobs': null,
+            'stop': ['6.'],
+          };
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.setRequestHeader('Authorization', 'Bearer ' + secretKey);
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+              var response = JSON.parse(xhr.responseText);
+              output.innerHTML = response.choices[0].text;
+            }
+          };
+          xhr.send(JSON.stringify(data));
+        });
+      });
+
+    </script>
+  </head>
+
+  <body style="margin: 10px;">
+
+    </div>
+
+  </body>
+
+</html>
